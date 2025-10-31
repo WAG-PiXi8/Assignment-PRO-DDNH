@@ -1,0 +1,18 @@
+# Ignore build outputs
+/build/
+/dist/
+
+# Ignore NetBeans private configs
+nbproject/private/
+nbproject/genfiles.properties
+
+# Ignore compiled classes
+*.class
+
+# Ignore logs
+*.log
+
+# Ignore temporary or backup files
+*.tmp
+*~
+
