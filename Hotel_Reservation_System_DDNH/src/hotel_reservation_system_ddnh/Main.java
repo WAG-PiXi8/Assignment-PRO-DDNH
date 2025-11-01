@@ -1,11 +1,15 @@
 package hotel_reservation_system_ddnh; 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     private static CustomerManager customerManager = new CustomerManager();
     private static HotelManager hotelManager = new HotelManager();
+    private static ReservationManager reservationManager = new ReservationManager(hotelManager, customerManager);
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -16,7 +20,8 @@ public class Main {
             System.out.println("1. Manage Customers");
             System.out.println("2. Manage Hotels");
             System.out.println("3. Manage Rooms");
-            System.out.println("4. Exit");
+            System.out.println("4. Manage Reservation");
+            System.out.println("5. Exit");
             System.out.print("Choose an option: ");
             int choice = getIntInput();
 
@@ -24,7 +29,8 @@ public class Main {
                 case 1: manageCustomers(); break;
                 case 2: manageHotels(); break;
                 case 3: manageRooms(); break;
-                case 4:
+                case 4: manageReservations(); break;
+                case 5:
                     running = false;
                     break;
                 default: System.out.println("Invalid choice.");
@@ -200,6 +206,88 @@ public class Main {
         }
     }
 
+    private static void manageReservations() {
+        System.out.println("\n--- Manage Reservations ---");
+        System.out.println("1. Create Reservation");
+        System.out.println("2. Add Room to Reservation");
+        System.out.println("3. Remove Room from Reservation");
+        System.out.println("4. Cancel Reservation");
+        System.out.println("5. View Reservation Details");
+        System.out.println("6. List Reservations");
+        System.out.print("Choose: ");
+        int choice = getIntInput();
+
+        switch (choice) {
+            case 1:
+                System.out.print("Customer ID: ");
+                String cid = scanner.nextLine();
+                System.out.print("Check-in Date (YYYY-MM-DD): ");
+                LocalDate checkIn = getDateInput();
+                System.out.print("Check-out Date (YYYY-MM-DD): ");
+                LocalDate checkOut = getDateInput();
+                if (checkIn.isAfter(checkOut)) {
+                    System.out.println("Invalid dates.");
+                    return;
+                }
+                String resId = reservationManager.generateReservationId();
+                
+                List<String> roomIds = new ArrayList<>();
+                while (true) {
+                    System.out.print("Add Room ID (enter 'done' to finish): ");
+                    String rid = scanner.nextLine();
+                    if (!reservationManager.isRoomAvailable(rid, checkIn, checkOut)){
+                        System.out.println("Room " + rid + " is not available for the dates.");
+                        continue;
+                    }
+                    if (rid.equals("done")) break;
+                    roomIds.add(rid);
+                }
+                Reservation res = new Reservation(resId, cid, checkIn, checkOut, roomIds);
+                reservationManager.createReservation(res);
+                break;
+            case 2:
+                System.out.print("Reservation ID: ");
+                resId = scanner.nextLine();
+                System.out.print("Room ID: ");
+                String rid = scanner.nextLine();
+                reservationManager.addRoomToReservation(resId, rid);
+                break;
+            case 3:
+                System.out.print("Reservation ID: ");
+                resId = scanner.nextLine();
+                System.out.print("Room ID: ");
+                rid = scanner.nextLine();
+                reservationManager.removeRoomFromReservation(resId, rid);
+                break;
+            case 4:
+                System.out.print("Reservation ID: ");
+                resId = scanner.nextLine();
+                reservationManager.cancelReservation(resId);
+                break;
+            case 5:
+                System.out.print("Reservation ID: ");
+                resId = scanner.nextLine();
+                Reservation r = reservationManager.findReservationById(resId);
+                if (r != null) {
+                    Customer c = customerManager.findCustomerById(r.getCustomerId());
+                    System.out.println("Details: " + r);
+                    System.out.println("Customer: " + (c != null ? c : "Not found"));
+                    System.out.print("Rooms: ");
+                    for (String id : r.getRoomIds()) {
+                        Room room = hotelManager.findRoomById(id);
+                        System.out.println(room != null ? room : "Not found");
+                    }
+                } else {
+                    System.out.println("Reservation not found.");
+                }
+                break;
+            case 6:
+                reservationManager.getAllReservations().forEach(System.out::println);
+                break;
+            default: System.out.println("Invalid choice.");
+        }
+    }
+    
     private static int getIntInput() {
         try {
             return Integer.parseInt(scanner.nextLine());
@@ -215,6 +303,15 @@ public class Main {
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Enter number.");
             return getDoubleInput();
+        }
+    }
+    
+    private static LocalDate getDateInput() {
+        try {
+            return LocalDate.parse(scanner.nextLine());
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Use YYYY-MM-DD.");
+            return getDateInput();
         }
     }
 }
