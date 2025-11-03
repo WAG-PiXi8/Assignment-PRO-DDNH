@@ -1,0 +1,31 @@
+HTL001|Sunset Hotel 1|456 Elm St, Ho Chi Minh City
+HTL002|Urban Stay 2|456 Elm St, Ho Chi Minh City
+HTL003|River Side 3|123 Main St, Hanoi
+HTL004|Sunset Hotel 4|456 Elm St, Ho Chi Minh City
+HTL005|Forest Retreat 5|789 Oak St, Da Nang
+HTL006|River Side 6|202 Maple St, Nha Trang
+HTL007|Mountain Lodge 7|202 Maple St, Nha Trang
+HTL008|Urban Stay 8|123 Main St, Hanoi
+HTL009|Forest Retreat 9|123 Main St, Hanoi
+HTL010|Forest Retreat 10|789 Oak St, Da Nang
+HTL011|Mountain Lodge 11|789 Oak St, Da Nang
+HTL012|Luxury Inn 12|123 Main St, Hanoi
+HTL013|River Side 13|123 Main St, Hanoi
+HTL014|Grand Hotel 14|456 Elm St, Ho Chi Minh City
+HTL015|Beach Resort 15|123 Main St, Hanoi
+HTL016|Urban Stay 16|101 Pine St, Hue
+HTL017|Luxury Inn 17|202 Maple St, Nha Trang
+HTL018|Grand Hotel 18|123 Main St, Hanoi
+HTL019|City View Hotel 19|789 Oak St, Da Nang
+HTL020|Beach Resort 20|456 Elm St, Ho Chi Minh City
+HTL021|City View Hotel 21|202 Maple St, Nha Trang
+HTL022|River Side 22|789 Oak St, Da Nang
+HTL023|Mountain Lodge 23|456 Elm St, Ho Chi Minh City
+HTL024|Grand Hotel 24|456 Elm St, Ho Chi Minh City
+HTL025|City View Hotel 25|456 Elm St, Ho Chi Minh City
+HTL026|Grand Hotel 26|101 Pine St, Hue
+HTL027|City View Hotel 27|202 Maple St, Nha Trang
+HTL028|Mountain Lodge 28|101 Pine St, Hue
+HTL029|City View Hotel 29|456 Elm St, Ho Chi Minh City
+HTL030|Sunset Hotel 30|789 Oak St, Da Nang
+HTL031|hotel1|abc
