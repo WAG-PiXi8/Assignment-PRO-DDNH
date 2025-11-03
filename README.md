@@ -1,6 +1,6 @@
 # Assignment-PRO-DDNH
 
-<b>Nguyễn Anh Đức<b>: Chịu trách nhiệm Module Quản lý Khách hàng (Customer Module).  
+<b>Nguyễn Anh Đức</b>: Chịu trách nhiệm Module Quản lý Khách hàng (Customer Module).  
 Nhiệm vụ cụ thể:
 <br>
 Code lớp Customer.java: Định nghĩa entity (fields, getters/setters, toString, toFileString, equals).
@@ -13,7 +13,7 @@ Thời gian ước tính: 1-2 ngày.
 Dependency: Không có. Output: List<Customer> để các module khác dùng.
 <br>
 <br>
-<b>Phạm Công Hùng<b>: Chịu trách nhiệm Module Quản lý Khách sạn và Phòng (Hotel & Room Module) 
+<b>Phạm Công Hùng</b>: Chịu trách nhiệm Module Quản lý Khách sạn và Phòng (Hotel & Room Module) 
 Nhiệm vụ cụ thể:
 <br>
 Code lớp Hotel.java: Entity (fields, getters/setters, add/remove Room, toString, toFileString, equals).
@@ -28,7 +28,7 @@ Thời gian ước tính: 2-3 ngày.
 <br>
 Dependency: Không có trực tiếp, nhưng cung cấp Room cho Reservation.
 
-<b>Nguyễn Huy Nhật<b>: Chịu trách nhiệm Module Quản lý Đặt phòng (Reservation Module) 
+<b>Nguyễn Huy Nhật</b>: Chịu trách nhiệm Module Quản lý Đặt phòng (Reservation Module) 
 <br>
 Nhiệm vụ cụ thể:
 Code lớp Reservation.java: Entity (fields, getters/setters, add/remove RoomId, calculateTotalNights, calculateTotalAmount, toString, toFileString, equals).
@@ -43,7 +43,7 @@ Dependency: Sử dụng CustomerManager (từ Member A) để check customer, Ho
 <br>
 <br>
 
-<Nguyễn Minh Đức>: Chịu trách nhiệm Module Tích hợp và Lưu trữ (Integration & File Module) 
+<b>Nguyễn Minh Đức</b>: Chịu trách nhiệm Module Tích hợp và Lưu trữ (Integration & File Module) 
 <br>
 Nhiệm vụ cụ thể:
 <br>
