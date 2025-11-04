@@ -19,11 +19,6 @@ public class ReservationManager {
     }
 
     public void createReservation(Reservation reservation) {
-        if (customerManager.findCustomerById(reservation.getCustomerId()) == null) {
-            System.out.println("Customer not found.");
-            return;
-        }
-        
         if (!reservation.getRoomIds().isEmpty()) {
             reservation.calculateTotalAmount(hotelManager.getAllRooms());
             reservations.add(reservation);
@@ -58,21 +53,23 @@ public class ReservationManager {
 
     public void addRoomToReservation(String reservationId, String roomId) {
         Reservation res = findReservationById(reservationId);
-        if (res != null && res.getStatus().equals("Confirmed")) {
-            if (isRoomAvailable(roomId, res.getCheckInDate(), res.getCheckOutDate())) {
-                res.addRoomId(roomId);
-                res.calculateTotalAmount(hotelManager.getAllRooms());
-            } else {
-                System.out.println("Room not available.");
-            }
+        if (isRoomAvailable(roomId, res.getCheckInDate(), res.getCheckOutDate())) {
+            res.addRoomId(roomId);
+            System.out.println("Room added successfully");
+            res.calculateTotalAmount(hotelManager.getAllRooms());
+        } else {
+            System.out.println("Room not available.");
         }
     }
 
     public void removeRoomFromReservation(String reservationId, String roomId) {
         Reservation res = findReservationById(reservationId);
-        if (res != null && res.getStatus().equals("Confirmed")) {
+        if (res.getRoomIds().contains(roomId)) {
             res.removeRoomId(roomId);
+            System.out.println("Room removed successfully.");
             res.calculateTotalAmount(hotelManager.getAllRooms());
+        }else{
+            System.out.println("Room not found.");
         }
     }
 
@@ -80,6 +77,7 @@ public class ReservationManager {
         Reservation res = findReservationById(reservationId);
         if (res != null) {
             res.setStatus("Cancelled");
+            System.out.println("Reservation cancelled successfully.");
         }
     }
 
@@ -96,19 +94,33 @@ public class ReservationManager {
         return "RES" + String.format("%03d", maxId + 1);
     }
 
-    public List<Customer> sortCustomersByTotalSpent() {
+    public List<Customer> sortCustomersByTotalSpent(int order) {
         Map<String, Double> spending = new HashMap<>();
         for (Reservation r : reservations) {
             if (r.getStatus().equals("Confirmed")) {
-                spending.put(r.getCustomerId(), spending.getOrDefault(r.getCustomerId(), 0.0) + r.getTotalAmount());
+                String customerId = r.getCustomerId();
+                double currentSpending = spending.getOrDefault(customerId, 0.0);
+                spending.put(customerId, currentSpending + r.getTotalAmount());
             }
         }
-        return customerManager.getAllCustomers().stream()
-                .sorted(Comparator.comparingDouble(c -> -spending.getOrDefault(c.getCustomerId(), 0.0))) // Descending
-                .collect(Collectors.toList());
+
+        List<Customer> allCustomers = customerManager.getAllCustomers();
+
+        Collections.sort(allCustomers, new Comparator<Customer>() {
+            @Override
+            public int compare(Customer c1, Customer c2) {
+                double total1 = spending.getOrDefault(c1.getCustomerId(), 0.0);
+                double total2 = spending.getOrDefault(c2.getCustomerId(), 0.0);
+                   
+                if(order == 1) return Double.compare(total1, total2);
+                else return Double.compare(total2, total1);
+            }
+        });
+
+        return allCustomers;
     }
 
-    public List<Hotel> sortHotelsByBookingCount() {
+    public List<Hotel> sortHotelsByBookingCount(int order) {
         Map<String, Integer> bookingCount = new HashMap<>();
         for (Reservation r : reservations) {
             if (r.getStatus().equals("Confirmed")) {
@@ -121,9 +133,20 @@ public class ReservationManager {
                 }
             }
         }
-        return hotelManager.getAllHotels().stream()
-                .sorted(Comparator.comparingInt(h -> -bookingCount.getOrDefault(h.getHotelId(), 0))) // Descending
-                .collect(Collectors.toList());
+        
+        List<Hotel> allHotels = hotelManager.getAllHotels();
+        
+        Collections.sort(allHotels, new Comparator<Hotel>(){
+            @Override
+            public int compare(Hotel h1, Hotel h2){
+                int total1 = bookingCount.getOrDefault(h1.getHotelId(), 0);
+                int total2 = bookingCount.getOrDefault(h2.getHotelId(), 0);
+                
+                if (order == 1) return total1 - total2;
+                else return total2 - total1;
+            }
+        });
+        return allHotels;
     }
 
     public String findMostPopularRoomType() {
@@ -139,9 +162,16 @@ public class ReservationManager {
                 }
             }
         }
-        return typeCount.entrySet().stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
-                .map(Map.Entry::getKey).orElse("None");
+        String mostPopularType = "None";
+        int maxCount = 0;   
+        for (Map.Entry<String, Integer> entry : typeCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostPopularType = entry.getKey();
+            }
+        }
+
+        return mostPopularType;
     }
 
     public Customer findCustomerWithMostReservations() {
@@ -151,9 +181,21 @@ public class ReservationManager {
                 resCount.put(r.getCustomerId(), resCount.getOrDefault(r.getCustomerId(), 0) + 1);
             }
         }
-        String topId = resCount.entrySet().stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
-                .map(Map.Entry::getKey).orElse(null);
-        return customerManager.findCustomerById(topId);
+        
+        String topCustomerId = null;
+        int maxCount = 0;
+
+        for (Map.Entry<String, Integer> entry : resCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                topCustomerId = entry.getKey();
+            }
+        }
+
+        if (topCustomerId != null) {
+            return customerManager.findCustomerById(topCustomerId);
+        } else {
+            return null;
+        }
     }
 }

@@ -224,6 +224,10 @@ public class Main {
             case 1:
                 System.out.print("Customer ID: ");
                 String cid = scanner.nextLine();
+                if (customerManager.findCustomerById(cid) == null) {
+                    System.out.println("Customer not found.");
+                    return;
+                }
                 System.out.print("Check-in Date (YYYY-MM-DD): ");
                 LocalDate checkIn = getDateInput();
                 System.out.print("Check-out Date (YYYY-MM-DD): ");
@@ -251,20 +255,48 @@ public class Main {
             case 2:
                 System.out.print("Reservation ID: ");
                 resId = scanner.nextLine();
+                res = reservationManager.findReservationById(resId);
+                if(res == null){
+                    System.out.println("Reservation not found.");
+                    return;
+                }else if(res.getStatus() == "Cancelled"){
+                    System.out.println("Reservation already cancelled.");
+                    return;
+                }
                 System.out.print("Room ID: ");
                 String rid = scanner.nextLine();
+                if(hotelManager.findRoomById(rid) == null){
+                    System.out.println("Room not found.");
+                    return;
+                }
                 reservationManager.addRoomToReservation(resId, rid);
                 break;
             case 3:
                 System.out.print("Reservation ID: ");
                 resId = scanner.nextLine();
+                res = reservationManager.findReservationById(resId);
+                if(res == null){
+                    System.out.println("Reservation not found.");
+                    return;
+                }else if(res.getStatus() == "Cancelled"){
+                    System.out.println("Reservation already cancelled.");
+                    return;
+                }
                 System.out.print("Room ID: ");
                 rid = scanner.nextLine();
+                if(hotelManager.findRoomById(rid) == null){
+                    System.out.println("Room not found.");
+                    return;
+                }
                 reservationManager.removeRoomFromReservation(resId, rid);
                 break;
             case 4:
                 System.out.print("Reservation ID: ");
                 resId = scanner.nextLine();
+                if(reservationManager.findReservationById(resId) == null){
+                    System.out.println("Reservation not found.");
+                    return;
+                }
                 reservationManager.cancelReservation(resId);
                 break;
             case 5:
@@ -286,6 +318,56 @@ public class Main {
                 break;
             case 6:
                 reservationManager.getAllReservations().forEach(System.out::println);
+                break;
+            default: System.out.println("Invalid choice.");
+        }
+    }
+    
+    private static void viewReports() {
+        System.out.println("\n------ Reports ------");
+        System.out.println("1. Sort Customers by total spent");
+        System.out.println("2. Sort Hotel by booking count");
+        System.out.println("3. Most popular Room type");
+        System.out.println("4. Customer with most Reservations");
+        System.out.println("Choose: ");
+        int choice = getIntInput();
+        int order;
+        
+        switch (choice) {
+            case 1:
+                System.out.println("\n------ Reports ------");
+                System.out.println("1. Ascending list");
+                System.out.println("2. Decending list");
+                System.out.println("Choose: ");
+                do{
+                    order = getIntInput();
+                    if(order == 1 || order == 2) break;
+                    System.out.println("Invalid choice.");
+                }while(true);
+                reservationManager.sortCustomersByTotalSpent(order).
+                        forEach(System.out::println);
+                break;
+            case 2:
+                System.out.println("\n------ Reports ------");
+                System.out.println("1. Ascending list");
+                System.out.println("2. Decending list");
+                System.out.println("Choose: ");
+                do{
+                    order = getIntInput();
+                    if(order == 1 || order == 2) break;
+                    System.out.println("Invalid choice.");
+                }while(true);
+                reservationManager.sortHotelsByBookingCount(order).
+                        forEach(System.out::println);
+                break;
+            case 3:
+                System.out.println("Most popular room type: " +
+                        reservationManager.findMostPopularRoomType());
+                break;
+            case 4:
+                Customer c = reservationManager.findCustomerWithMostReservations();
+                System.out.println("Customer with most reservations: " + 
+                        (c != null ? c : "None"));
                 break;
             default: System.out.println("Invalid choice.");
         }
@@ -315,37 +397,6 @@ public class Main {
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format. Use YYYY-MM-DD.");
             return getDateInput();
-        }
-    }
-    
-    private static void viewReports() {
-        System.out.println("\n------ Reports ------");
-        System.out.println("1. Sort Customers by total spent");
-        System.out.println("2. Sort Hotel by booking count");
-        System.out.println("3. Most popular Room type");
-        System.out.println("4. Customer with most Reservations");
-        System.out.println("Choose: ");
-        int choice = getIntInput();
-        
-        switch (choice) {
-            case 1:
-                reservationManager.sortCustomersByTotalSpent().
-                        forEach(System.out::println);
-                break;
-            case 2:
-                reservationManager.sortHotelsByBookingCount().
-                        forEach(System.out::println);
-                break;
-            case 3:
-                System.out.println("Most popular room type" +
-                        reservationManager.findMostPopularRoomType());
-                break;
-            case 4:
-                Customer c = reservationManager.findCustomerWithMostReservations();
-                System.out.println("Customer with most reservations: " + 
-                        (c != null ? c : "None"));
-                break;
-            default: System.out.println("Invalid choice.");
         }
     }
 }
