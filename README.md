@@ -39,7 +39,7 @@ Test: Test create reservation, check availability, calculate total, reports (s�
 <br>
 Thời gian ước tính: 3-4 ngày.
 <br>
-Dependency: Sử dụng CustomerManager (từ Member A) để check customer, HotelManager (từ Member B) để get rooms và calculate.
+Dependency: Sử dụng CustomerManager (từ phần của And Đức) để check customer, HotelManager (từ phần của Công Hùng) để get rooms và calculate.
 <br>
 <br>
 
