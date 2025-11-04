@@ -13,6 +13,7 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        FileManager.loadData(customerManager, hotelManager, reservationManager);
         boolean running = true;
         while (running) {
             System.out.println("\n--- Hotel Reservation System ---");
@@ -20,7 +21,8 @@ public class Main {
             System.out.println("2. Manage Hotels");
             System.out.println("3. Manage Rooms");
             System.out.println("4. Manage Reservation");
-            System.out.println("5. Exit");
+            System.out.println("5. View Reports");
+            System.out.println("6. Save and Exit");
             System.out.print("Choose an option: ");
             int choice = getIntInput();
 
@@ -29,7 +31,9 @@ public class Main {
                 case 2: manageHotels(); break;
                 case 3: manageRooms(); break;
                 case 4: manageReservations(); break;
-                case 5:
+                case 5: viewReports(); break;
+                case 6:
+                    FileManager.saveData(customerManager, hotelManager, reservationManager);
                     running = false;
                     break;
                 default: System.out.println("Invalid choice.");
@@ -311,6 +315,37 @@ public class Main {
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format. Use YYYY-MM-DD.");
             return getDateInput();
+        }
+    }
+    
+    private static void viewReports() {
+        System.out.println("\n------ Reports ------");
+        System.out.println("1. Sort Customers by total spent");
+        System.out.println("2. Sort Hotel by booking count");
+        System.out.println("3. Most popular Room type");
+        System.out.println("4. Customer with most Reservations");
+        System.out.println("Choose: ");
+        int choice = getIntInput();
+        
+        switch (choice) {
+            case 1:
+                reservationManager.sortCustomersByTotalSpent().
+                        forEach(System.out::println);
+                break;
+            case 2:
+                reservationManager.sortHotelsByBookingCount().
+                        forEach(System.out::println);
+                break;
+            case 3:
+                System.out.println("Most popular room type" +
+                        reservationManager.findMostPopularRoomType());
+                break;
+            case 4:
+                Customer c = reservationManager.findCustomerWithMostReservations();
+                System.out.println("Customer with most reservations: " + 
+                        (c != null ? c : "None"));
+                break;
+            default: System.out.println("Invalid choice.");
         }
     }
 }
