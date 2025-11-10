@@ -60,9 +60,19 @@ public class Main {
                     System.out.print("Full Name: ");
                     String name = scanner.nextLine();
                     System.out.print("Email: ");
-                    String email = scanner.nextLine();
+                    String email;
+                    while(true){
+                        email = scanner.nextLine();
+                        if(email.matches("^\\S+@\\S+\\.\\S+$")) break;
+                        System.out.print("Invalid email: ");
+                    }
                     System.out.print("Phone: ");
-                    String phone = scanner.nextLine();
+                    String phone;
+                    while(true){
+                        phone = scanner.nextLine();
+                        if(phone.matches("\\d+")) break;
+                        System.out.print("Invalid phonenumber: ");
+                    }
                     String id = customerManager.generateCustomerId();
                     customerManager.addCustomer(new Customer(id, name, email, phone));
                     System.out.println("Added customer with ID: " + id);
@@ -79,9 +89,19 @@ public class Main {
                     System.out.print("New Name (enter to skip): ");
                     String newName = scanner.nextLine();
                     System.out.print("New Email (enter to skip): ");
-                    String newEmail = scanner.nextLine();
+                    String newEmail;
+                    while(true){
+                        newEmail = scanner.nextLine();
+                        if(newEmail.matches("^\\S+@\\S+\\.\\S+$")) break;
+                        System.out.print("Invalid email: ");
+                    }
                     System.out.print("New Phone (enter to skip): ");
-                    String newPhone = scanner.nextLine();
+                    String newPhone;
+                    while(true){
+                        newPhone = scanner.nextLine();
+                        if(newPhone.matches("\\d+")) break;
+                        System.out.print("Invalid phonenumber: ");
+                    }
                     customerManager.updateCustomer(cid, newName, newEmail, newPhone);
                     break;
                 case 3:
